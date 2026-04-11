@@ -13,6 +13,9 @@ export interface User {
   language: string;
   created_at: string;
   auth_type: 'telegram' | 'email' | 'google' | 'yandex' | 'discord' | 'vk'; // Тип аутентификации
+  invite_activated: boolean; // Активирован ли инвайт
+  is_permanent: boolean; // Перманентный доступ (без инвайта)
+  is_banned: boolean; // Заблокирован ли пользователь
 }
 
 // OAuth types

@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware';
 import type { CampaignBonusInfo, RegisterResponse, User } from '../types';
 import { authApi } from '../api/auth';
 import { apiClient } from '../api/client';
+import { inviteApi } from '../api/invite';
 import {
   captureCampaignFromUrl,
   consumeCampaignSlug,
@@ -59,7 +60,9 @@ interface AuthState {
     password: string,
     firstName?: string,
     referralCode?: string,
+    inviteCode?: string,
   ) => Promise<RegisterResponse>;
+  activateInvite: (code: string) => Promise<void>;
 }
 
 const initState = {
@@ -357,7 +360,7 @@ export const useAuthStore = create<AuthState>()(
         await get().checkAdminStatus();
       },
 
-      registerWithEmail: async (email, password, firstName, referralCode) => {
+      registerWithEmail: async (email, password, firstName, referralCode, inviteCode) => {
         const code = referralCode || getPendingReferralCode() || undefined;
         const campaignSlug = getPendingCampaignSlug() || undefined;
         const response = await authApi.registerEmailStandalone({
@@ -367,9 +370,17 @@ export const useAuthStore = create<AuthState>()(
           language: navigator.language.split('-')[0] || 'ru',
           referral_code: code,
           campaign_slug: campaignSlug,
+          invite_code: inviteCode || undefined,
         });
         consumeReferralCode();
         return response;
+      },
+
+      // Активация инвайт-кода и обновление данных пользователя
+      activateInvite: async (code) => {
+        await inviteApi.activate(code);
+        const user = await authApi.getMe();
+        set({ user });
       },
     }),
     {

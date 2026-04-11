@@ -98,6 +98,7 @@ export const authApi = {
     language?: string;
     referral_code?: string;
     campaign_slug?: string;
+    invite_code?: string;
   }): Promise<RegisterResponse> => {
     const response = await apiClient.post<RegisterResponse>(
       '/cabinet/auth/email/register/standalone',

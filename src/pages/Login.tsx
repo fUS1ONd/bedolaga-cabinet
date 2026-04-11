@@ -47,6 +47,12 @@ export default function Login() {
   // Get referral code from localStorage (captured from ?ref= param at module level in auth store)
   const referralCode = getPendingReferralCode() || '';
 
+  // Получаем инвайт-код из URL параметра ?invite=CODE
+  const inviteCode = useMemo(() => {
+    const params = new URLSearchParams(location.search);
+    return params.get('invite') || '';
+  }, [location.search]);
+
   const [authMode, setAuthMode] = useState<'login' | 'register'>(() =>
     referralCode ? 'register' : 'login',
   );
@@ -255,6 +261,7 @@ export default function Login() {
           password,
           firstName || undefined,
           referralCode || undefined,
+          inviteCode || undefined,
         );
         // Show "check your email" screen
         setRegisteredEmail(result.email);

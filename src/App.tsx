@@ -40,6 +40,7 @@ import DeepLinkRedirect from './pages/DeepLinkRedirect';
 import VerifyEmail from './pages/VerifyEmail';
 import ResetPassword from './pages/ResetPassword';
 import OAuthCallback from './pages/OAuthCallback';
+import Landing from './pages/Landing';
 
 // Dashboard - load eagerly (default route, LCP-critical)
 import Dashboard from './pages/Dashboard';
@@ -221,6 +222,34 @@ function LegacySubscriptionRedirect() {
   return <Navigate to={`/subscriptions/${subscriptionId}`} replace />;
 }
 
+/**
+ * Корневой маршрут: если пользователь авторизован, инвайт активирован и не забанен — дашборд,
+ * иначе — лендинг (мебельный магазин)
+ */
+function RootRoute() {
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const isLoading = useAuthStore((state) => state.isLoading);
+  const user = useAuthStore((state) => state.user);
+
+  if (isLoading) {
+    return <PageLoader variant="dark" />;
+  }
+
+  // Если авторизован + инвайт активирован + не забанен → дашборд
+  if (isAuthenticated && user?.invite_activated && !user?.is_banned) {
+    return (
+      <ProtectedRoute>
+        <LazyPage>
+          <Dashboard />
+        </LazyPage>
+      </ProtectedRoute>
+    );
+  }
+
+  // Иначе показываем лендинг
+  return <Landing />;
+}
+
 function App() {
   useAnalyticsCounters();
 
@@ -277,9 +306,12 @@ function App() {
           }
         />
 
+        {/* Корневой маршрут — лендинг или дашборд в зависимости от состояния инвайта */}
+        <Route path="/" element={<RootRoute />} />
+
         {/* Protected routes */}
         <Route
-          path="/"
+          path="/dashboard"
           element={
             <ProtectedRoute>
               <LazyPage>

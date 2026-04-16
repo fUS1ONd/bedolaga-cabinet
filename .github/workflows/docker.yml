@@ -58,6 +58,6 @@ jobs:
           cache-to: type=gha,mode=max
           build-args: |
             VITE_API_URL=/api
-            VITE_TELEGRAM_BOT_USERNAME=
-            VITE_APP_NAME=Cabinet
-            VITE_APP_LOGO=V
+            VITE_TELEGRAM_BOT_USERNAME=fus1ondVpnBot
+            VITE_APP_NAME=Bedolaga
+            VITE_APP_LOGO=B

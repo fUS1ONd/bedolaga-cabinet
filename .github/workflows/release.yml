@@ -72,7 +72,7 @@ jobs:
             ## Docker Image
 
             ```bash
-            docker pull ghcr.io/${{ github.repository }}:${{ github.ref_name }}
+            docker pull fus1ond/bedolaga-cabinet:${{ github.ref_name }}
             ```
 
             ## Installation

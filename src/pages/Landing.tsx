@@ -69,18 +69,33 @@ export default function Landing() {
             <span className="text-xl font-bold text-gray-800">МебельДом</span>
           </div>
           <nav className="hidden gap-6 text-sm text-gray-600 md:flex">
-            <a href="#catalog" className="transition hover:text-gray-900">Каталог</a>
-            <a href="#about" className="transition hover:text-gray-900">О нас</a>
-            <a href="#delivery" className="transition hover:text-gray-900">Доставка</a>
-            <a href="#contacts" className="transition hover:text-gray-900">Контакты</a>
+            <a href="#catalog" className="transition hover:text-gray-900">
+              Каталог
+            </a>
+            <a href="#about" className="transition hover:text-gray-900">
+              О нас
+            </a>
+            <a href="#delivery" className="transition hover:text-gray-900">
+              Доставка
+            </a>
+            <a href="#contacts" className="transition hover:text-gray-900">
+              Контакты
+            </a>
           </nav>
           <div className="flex items-center gap-3">
-            {isAuthenticated && (
+            {isAuthenticated ? (
               <button
                 onClick={logout}
                 className="rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-600 transition hover:bg-gray-50"
               >
                 Выйти
+              </button>
+            ) : (
+              <button
+                onClick={() => navigate('/login')}
+                className="rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-600 transition hover:bg-gray-50"
+              >
+                Войти
               </button>
             )}
           </div>
@@ -181,9 +196,7 @@ export default function Landing() {
                 {promoLoading ? '...' : 'Применить'}
               </button>
             </form>
-            {promoError && (
-              <p className="mt-3 text-center text-sm text-red-600">{promoError}</p>
-            )}
+            {promoError && <p className="mt-3 text-center text-sm text-red-600">{promoError}</p>}
           </div>
         </section>
       )}
